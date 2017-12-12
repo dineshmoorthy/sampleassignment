@@ -1,0 +1,7 @@
+applications:
+- name: demo-micro-services
+  memory: 1024M
+  instances: 1
+  path: target/demo-0.0.1-SNAPSHOT.jar
+  env:
+    SPRING_PROFILES_ACTIVE: cloud
