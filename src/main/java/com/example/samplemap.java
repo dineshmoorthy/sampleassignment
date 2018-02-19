@@ -84,3 +84,28 @@ public void deleteItem(final List<CartItem> cartItems) {
 		removePromotions(promotionIdsToDelete);
 
 	}
+
+
+
+
+List<String> cartKeys = new ArrayList<>();
+		cartKeys.add("4234267667-1");
+		cartKeys.add("2521567534-1");
+private void addLosgId(Map<String,List<String>> losgIdItemsMap,CartItem cartItem,WirelineCartItem wirelineCartItem){
+		List<String> itemIds = new ArrayList<>();
+		if(losgIdItemsMap.containsKey(cartItem.getLosgId())){
+			itemIds.addAll(losgIdItemsMap.get(cartItem.getLosgId()));
+			itemIds.add(wirelineCartItem.getItemId());
+			losgIdItemsMap.put(cartItem.getLosgId(), itemIds);
+		}else if(losgIdItemsMap.isEmpty() 
+				|| null == losgIdItemsMap.get(cartItem.getLosgId()) 
+					|| losgIdItemsMap.get(cartItem.getLosgId()).isEmpty()){
+			itemIds.add(wirelineCartItem.getItemId());
+			losgIdItemsMap.put(cartItem.getLosgId(), itemIds);
+		}
+	}		
+
+Set<COSCKey> paramSet = new HashSet<>();
+
+final List<String> productIds = new ArrayList<>();
+productIds.add(cartItem.getProductId());
