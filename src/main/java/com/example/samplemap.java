@@ -55,3 +55,32 @@
                     
 
               }
+
+
+
+public void deleteItem(final List<CartItem> cartItems) {
+		// TODO Auto-generated method stub
+		List<String> itemIdsToDelete = new ArrayList<>();
+		List<String> promotionIdsToDelete = new ArrayList<>();
+
+		final Map<String, WirelineCartItem> itemInfoMap = wirelineCart.getItemInfoMap();
+		if (Optional.ofNullable(itemInfoMap).isPresent()) {
+			for (final String key : itemInfoMap.keySet()) {
+				if (Optional.ofNullable(key).isPresent()) {
+					final WirelineCartItem wirelineCartItem = wirelineCart.getItemInfoMap().get(key);
+					for (final CartItem cartItem : cartItems) {
+						if (Optional.ofNullable(cartItem).isPresent()
+								&& wirelineCartItem.getSkuId().equals(cartItem.getSkuId())
+								&& wirelineCartItem.getProductId().equals(cartItem.getProductId())) {
+							itemIdsToDelete.add(wirelineCartItem.getItemId());
+							promotionIdsToDelete = retrievePromotionID(wirelineCartItem.getPriceInfo(),promotionIdsToDelete);
+						}
+					}
+				}
+
+			}
+		}
+		removeItems(itemIdsToDelete);
+		removePromotions(promotionIdsToDelete);
+
+	}
