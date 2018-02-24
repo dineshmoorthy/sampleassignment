@@ -109,3 +109,39 @@ Set<COSCKey> paramSet = new HashSet<>();
 
 final List<String> productIds = new ArrayList<>();
 productIds.add(cartItem.getProductId());
+
+
+
+private Map<String,List<String>> sortByComparator(Map<String,List<String>> unsortMap) {
+		
+		  Map<String,List<String>> sortedMap = new LinkedHashMap<String,List<String>>();
+		  List<Entry<String, List<String>>> list = new LinkedList<Entry<String, List<String>>>(unsortMap.entrySet());
+		
+		  try{
+	        //sort list based on comparator
+	        Collections.sort(list, new Comparator() {
+				public int compare(Object o1, Object o2) {
+		           return ((Comparable) ((Map.Entry) (o1)).getKey())
+		           .compareTo(((Map.Entry) (o2)).getKey());
+	             }
+	        });
+	 
+	        //put sorted list into map again
+	      
+	        for (Iterator iterator = list.iterator(); iterator.hasNext();)
+	        {
+				Entry<String, List<String>> entry = (Entry<String, List<String>>) iterator.next();
+				Collections.sort(entry.getValue());
+				sortedMap.put(entry.getKey(), entry.getValue());
+			}
+			}catch (Exception e) {
+				//e.printStackTrace();
+				log.debug("Exception: " + e.getMessage());
+				log.debug(LobbyServerMessages.getStackTraceAsString(e));
+			}
+	        
+			return sortedMap;
+	   	}
+
+}
+
