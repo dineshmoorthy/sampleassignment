@@ -41,14 +41,19 @@ public List<Group> getOtherGroups(String userid) {
 	
 	@Override
 	public List<Group> getOtherGroups(String userid) {
-  // method 3
-		//public List<Group> filterjavaeight(String userid) {
-
-		List<Group> allgroupList = groupRepository.findAll();
-		final List<String> usergroupList = userRepository.findGroupsById(userid);
-		allgroupList.removeIf((Group pp) -> {
-			return usergroupList.stream().anyMatch(x -> (pp.getId().equals(x)));
-		});
-		return allgroupList;
+		try {
+			List<Group> allgroupList = groupRepository.findAll();
+			List<String> usergroupList = userRepository.findGroupsById(userid);
+			if (!allgroupList.isEmpty() && !usergroupList.isEmpty()) {
+				allgroupList.removeIf((Group pp) -> {
+					return usergroupList.stream().anyMatch(x -> (pp.getId().equals(x)));
+				});
+				return allgroupList;
+			}else {
+				return new ArrayList<Group>();
+			}
+		} catch (Exception ex) {
+			throw new EntityNotFoundException(UserMessage.USER_NOT_FOUND.getMessage());
+		}
 
 	}
