@@ -1,0 +1,95 @@
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Repository;
+
+import com.ipg.horizon.nms.exception.EntityNotFoundException;
+import com.ipg.horizon.nms.usermanagement.model.User;
+import com.ipg.horizon.nms.usermanagement.repository.UserCustomRepository;
+import com.mongodb.client.result.UpdateResult;
+
+@Repository
+public class UserCustomRepositoryImpl implements UserCustomRepository {
+
+	@Autowired
+	MongoTemplate template;
+	
+	private static final String GROUP = "groups";
+	private static final String ID = "id";
+
+	@Override
+	public boolean pushGroupIdInUsers(List<String> userIds, String groupId) {
+		Query getQuery = new Query(
+				new Criteria().andOperator(Criteria.where(ID).in(userIds), Criteria.where(GROUP).nin(groupId)));
+		Update updateQuery = new Update().push(GROUP, groupId);
+		UpdateResult result = template.updateMulti(getQuery, updateQuery, User.class);
+		return result.wasAcknowledged();
+	}
+
+	@Override
+	public boolean popGroupIdInUsers(List<String> userIds, String groupId) {
+		Query getQuery = new Query(
+				new Criteria().andOperator(Criteria.where(ID).in(userIds), Criteria.where(GROUP).in(groupId)));
+		Update updateQuery = new Update().pull(GROUP, groupId);
+		UpdateResult result = template.updateMulti(getQuery, updateQuery, User.class);
+		return result.wasAcknowledged();
+	}
+
+	@Override
+	public boolean unlockUser(String id, boolean locked, Long lockedTime, Integer loginAttempt) {
+		Query getQuery = new Query(Criteria.where(ID).is(id));
+		Update updateQuery = new Update().set("locked", locked).set("lockedTime", lockedTime)
+				.set("numberOfLoginAttempt", loginAttempt);
+		UpdateResult result = template.updateFirst(getQuery, updateQuery, User.class);
+		return result.wasAcknowledged();
+	}
+
+	@Override
+	public boolean blockUnBlockUser(String id, boolean blocked) {
+		Query getQuery = new Query(Criteria.where(ID).is(id));
+		Update updateQuery = new Update().set("blocked", blocked);
+		UpdateResult result = template.updateFirst(getQuery, updateQuery, User.class);
+		return result.wasAcknowledged();
+	}
+
+	@Override
+	public List<String> findGroupsById(String id) throws Exception {
+		Query query = Query.query(Criteria.where(ID).is(id));
+		query.fields().include(GROUP);
+		return template.findOne(query, User.class).getGroups();
+	}
+
+	@Override
+	public List<User> getAllUsersMini(){
+		Query query = new Query();
+		query.fields().exclude("nmsRole").exclude("domainRoleMapping").exclude("neRoleMapping").exclude(GROUP)
+				.exclude("passwordChange").exclude("lockedTime").exclude("numberOfLoginAttempt").exclude("notes");
+		return template.find(query, User.class);
+	}
+
+	@Override
+	public boolean findDefaultUserById(String id) {
+		Query query = Query.query(Criteria.where(ID).is(id));
+		query.fields().include("defaultUser");
+		return template.findOne(query, User.class).isDefaultUser();
+	}
+
+	@Override
+	public List<User> findAllActiveUsersMini(boolean blocked) {
+		Query query = Query.query(Criteria.where("blocked").is(blocked));
+		query.fields().include("fullName").include("name");
+		return template.find(query, User.class);
+	}
+
+	@Override
+	public User findUserNameById(String id) {
+		Query query = Query.query(Criteria.where(ID).is(id));
+		query.fields().include("name");
+		return template.findOne(query, User.class);
+	}
+
+}
