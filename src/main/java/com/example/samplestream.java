@@ -37,6 +37,32 @@
  
 
               }
+        
+        
+        
+        // sample map to list using stream api
+           @Override
+    public List<User> findAllLoggedInUsers() {
+        User loggedInUser = this.findLoggedInUser();
+        if (loggedInUser.getUserType().getRole().equalsIgnoreCase(UserType.ADMIN.getRole())) {
+            return userRepository.findAll();
+        } else {
+            List<Group> groups = groupService.findGroupsByUserId(loggedInUser.getId());
+            Map<String, User> userNameMap = new HashMap<>();
+            for (Group group : groups) {
+                //  group.getUsers().stream().collect(Collectors.toMap(User::getName, user -> user));
+            	// if the username is there not to  do anything
+            	// if the user is not there we have to add it
+                for (User user : group.getUsers()) {
+                    if (!userNameMap.containsKey(user.getName())) {
+                        userNameMap.put(user.getName(), user);
+                    }
+                }
+            }
+            return userNameMap.values().stream().collect(Collectors.toList());
+        }
+    }
+
 
               return itemId;
 
