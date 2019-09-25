@@ -1,0 +1,194 @@
+java -jar nms-server/target/nms-server-0.0.1-SNAPSHOT.jar
+
+mvn spring-boot:run -Dspring-boot.run.profiles=prod
+
+mvn clean install -Dmaven.test.skip=true
+
+
+To resotre the data in mongodb from file json or  bson
+------------------------------------------------------
+mongoexport --db TestIpg --collection ipgnms --out C:\Users\madduri.r\Desktop\Mongodb_Backup\ipgnms.json 
+
+To take backup from mongodb to folder location
+---------------------------------------------
+mongodump
+
+mongodump --out C:\Users\madduri.r\Desktop\Mongodb_Backup 
+
+mongorestore -d IPGNMS C:/IPG/mongodump/mongodump/IPGNMS/
+
+mongorestore -d LEARN C:/IPG/2-may/mydb-dump
+
+mvn eclipse:clean eclipse:eclipse
+
+To get dump from Robomongo
+---------------------------
+mongoimport -d datbase_name -c collection_name file_name
+
+
+To update npm in angular
+------------------------
+npm config set proxy=http://hostname-s500:8080
+
+npm config set https-proxy=http://hostname-s500:8080
+
+npm install -g @angular/cli@latest
+
+npm config set proxy http://hostname-s500:8080
+npm config set https-proxy http://hostname-s500:8080
+
+
+
+======tsmdirfan@gmail.com========
+git config --global user.email "tsmdirfan@gmail.com"
+git config --global user.name "Irfan"
+=================================
+GIT BASh ->Git client
+
+
+==============================
+to make a current folder as git repository
+==============================
+1.git init
+
+==============================
+After writing files to add the files to git
+==============================
+2.git add .     ->.represents all files/ in place of . we can simply put file name
+
+==============================
+After add make commit to save the data and for future use
+==============================
+3.git commit -m "any name"  ->any name->revision one
+
+==============================
+After every commit -> log will store the commit history
+==============================
+4.git log
+
+==============================
+To check the status of files .. red->not added files ...blue->added files
+==============================
+5.git status
+
+==============================
+To do Undo operation after saving not after git add.
+==============================
+6.git checkout -- file name
+
+==============================
+To do Undo operation after doing git add .
+==============================
+7a. git reset HEAD filename ->it will unstage the file(means un add the files)
+7b.  git checkout -- file name(again this operation will Undo the changes)
+
+for multiple files 
+
+7c. git reset HEAD . ->it will unstage the file(means un add the files)
+7d.  git checkout -- .(again this operation will Undo the changes)
+
+==============================
+To forcefully remove the files
+==============================
+8.git rm -f  file name
+
+
+==============================
+To go to previous commit using log
+==============================
+9a.git log
+    sample ->
+	commit 287ea318543792249c9d8e00b86aac1e217ae424
+	Author: Irfan <tsmdirfan@gmail.com>
+	Date:   Mon Dec 17 20:41:59 2018 +0530
+	revision 2
+		
+	commit 287ea318543792249c9d8e00b86aac1e217ae424
+	Author: Irfan <tsmdirfan@gmail.com>
+	Date:   Mon Dec 17 20:12:42 2018 +0530
+	revision 1
+9b. git checkout 287ea318543792249c9d8e00b86aac1e217ae424
+	-> revision 1 commited files will come..	
+
+
+==============================
+To check the branches
+==============================
+10a.git branch
+10b.git branch -a
+	imran
+	irfan
+	master
+	developement
+==============================
+To change the branch name while we are in some other branch let a75bba8 where it commit log id
+==============================
+11a.git branch <branch-name> a75bba8
+    eg:-> git branch irfan a75bba8
+
+11b.git branch imran
+
+
+==============================
+To checkout/clone single branch 
+==============================
+git clone --single-branch --branch=devdemo http://10.147.13.122:8070/NMS/ipg-nms.git
+==============================
+
+==============================
+To merge the data from one branch to current branch
+==============================
+12.git merge <branch name from where we are merging>
+
+==============================
+To rename the branch name...
+==============================
+13.git branch -m <branch-name> <branch-name>
+eg:->git branch -m imran ansar
+
+==============================
+To Delete the branch name...
+==============================
+14.git branch -D <branch-name>
+eg:->git branch -D  ansar
+
+==============================
+To Ignore the files
+==============================
+15. vi gitignore
+	->write files which you want to ignore
+
+==============================
+For Cloning Data
+==============================
+16a. git clone <repo_name.git>
+16b.git clone https://link.git
+
+==============================
+For Hard Cloning Data
+==============================
+17.git clone --mirror <repo_name.git>
+     git config --bool core.bare false
+     git reset --hard
+
+==============================
+For Cloning particular branch Data
+==============================
+17.git clone --single-branch --branch user-activity-log-management-test http://10.105.45.159:3000/IPG/ipg-nms.git
+  eg->git clone --single-branch --branch user-activity-log-management-test http://10.105.45.159:3000/IPG/ipg-nms.git
+ 
+==============================
+For pulling 
+==============================
+17.git pull 
+eg:->git pull origin <branch name>
+         git pull origin imran
+		 
+==============================
+For pushing 
+==============================
+17a.git push --set-upstream origin <branch-name> 
+17b.git push origin <branch-name>
+eg:->git push --set-upstream origin irfan
+        git push origin irfan
+	
