@@ -4,6 +4,7 @@ mvn spring-boot:run -Dspring-boot.run.profiles=prod
 
 mvn clean install -Dmaven.test.skip=true
 
+mvn eclipse:clean eclipse:eclipse
 
 To resotre the data in mongodb from file json or  bson
 ------------------------------------------------------
