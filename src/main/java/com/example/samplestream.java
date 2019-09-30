@@ -62,6 +62,15 @@
             return userNameMap.values().stream().collect(Collectors.toList());
         }
     }
+        
+        
+        
+        
+		Map<String, ManagedObject> n = c.entrySet().stream()
+				.sorted(Map.Entry.comparingByValue(Comparator.comparing(ManagedObject::getIndex)))
+				.collect(Collectors.toMap(Entry::getKey, Entry::getValue, (x, y) -> {
+					throw new AssertionError();
+				}, LinkedHashMap::new));
 
 
               return itemId;
