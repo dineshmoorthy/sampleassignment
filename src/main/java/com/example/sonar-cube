@@ -1,0 +1,9 @@
+Steps to use sonarcube:
+Install sonarcube
+start the bat file and
+
+To include a module run below command 
+using command prompt - go to the module 
+mvn help:describe -Dplugin=org.jacoco:jacoco-maven-plugin -Ddetail
+mvn clean jacoco:prepare-agent install
+mvn sonar:sonar -Dsonar.host.url=http://localhost:9000
