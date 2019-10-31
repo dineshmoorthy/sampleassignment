@@ -1,4 +1,31 @@
- @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
+@Document(collection = "group")
+@TypeAlias("group")
+@NoArgsConstructor
+@Data
+public class Group extends AuditingEntity {
+
+    @Id
+    private String id;
+    @Details(name = "Group")
+    @NotBlank(message="random_usermanagement_group_name_required")
+    @Pattern(regexp = "^[a-z0-9_-]{8,64}$", message = "random_usermanagement_group_invalidName")
+    private String name;
+    @Details(name = "Blocked")
+    private boolean blocked;
+    @Details(name = "Description")
+    @Size(max = 512, message ="random_usermanagement_group_notes_valid")
+    private String notes;
+    @DBRef
+    private List<User> users;
+
+    private Set<String> systemPermissions;
+
+    List<DomainPermission> domainPermissions;
+
+    List<NEPermission> nePermissions;
+}
+
+@SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 
        public int getItemId(Map<String, WirelineCartItem> itemInfoMap) {
 
@@ -76,3 +103,49 @@
               return itemId;
 
        }
+
+
+// to collect getid from Group object into a list in one single line
+ 	List<Group> groups = groupRepository.findAll(QueryBuilder.query(filter, Group.class), PagingUtil.createSort(null, GROUP_DEFAULT_SORT));
+   	return groups.stream().map(Group::getId).collect(Collectors.toList());
+
+// changing from list of string to list of users
+ public Group pushUsersInGroup(Group group, List<String> userIds) {
+        List<User> users = userIds.stream().map(id -> {
+            User u = new User();
+            u.setId(id);
+            return u;
+        }).collect(Collectors.toList());
+
+	 // remove from group if that keyid is present in single line
+    public Group popUsersFromGroup(Group group, List<String> userIds) {
+        group.getUsers().removeIf(user -> userIds.contains(user.getId()));
+        return group;
+    }
+	// remove the 	 
+	private List<User> usersInEditMode() { 
+	List<Group> groups = this.findGroupsByUserId(loggedInUser.getId(), false);
+        Map<String, User> userNameMap = groups.stream().flatMap(group -> group.getUsers().stream()).collect(Collectors.toMap(User::getName, u -> u, (u1, u2) -> u1));
+        return userNameMap.values().stream().collect(Collectors.toList());
+	
+	// filter a group using stream.  then check isnotempty.... get next domainpermission 
+	List<Group> selectedUserGroups = this.findGroupsByUserId(loggedInUser.getId(), false);
+        Set<String> selectedDomainIds = selectedUserGroups.stream().filter(group -> CollectionUtils.isNotEmpty(group.getDomainPermissions()))
+                   .flatMap(grp -> grp.getDomainPermissions().stream()).map(d -> d.getDomainId().getId())
+                    .collect(Collectors.toSet());
+		
+ }
+// reverse order in single line
+editedDomainPerm
+	.values()
+	.stream()
+	.sorted(Comparator.comparing(d -> d.getDomainId().getName(), Comparator.reverseOrder()))
+	.collect(Collectors.toList());
+	 
+	 
+	 Map<String, NEPermission> selectNepermissions = new HashMap<>();
+        if (CollectionUtils.isNotEmpty(selectedGroup.getNePermissions())) {
+
+            selectNepermissions = selectedGroup.getNePermissions().stream()
+                    .collect(Collectors.toMap(n -> n.getNeInfo().getId(), n -> n, (n1, n2) -> n1));
+        }
