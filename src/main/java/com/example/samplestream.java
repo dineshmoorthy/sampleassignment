@@ -149,3 +149,43 @@ editedDomainPerm
             selectNepermissions = selectedGroup.getNePermissions().stream()
                     .collect(Collectors.toMap(n -> n.getNeInfo().getId(), n -> n, (n1, n2) -> n1));
         }
+	 
+	 
+	 
+	 
+// simple stream use case
+		Animal ani1 = new Animal();
+		ani1.setName("Rabbit");
+		ani1.setColor("white");
+		ani1.setPrice(50);
+		
+		Animal ani2 = new Animal();
+		ani2.setName("Rabbit");
+		ani2.setColor("black");
+		ani2.setPrice(200);
+		
+		Animal ani3 = new Animal();
+		ani3.setName("Rabbit");
+		ani3.setColor("grey");
+		ani3.setPrice(500);
+		
+		Animal ani4 = new Animal();
+		ani4.setName("tiger");
+		ani4.setColor("white");
+		ani4.setPrice(4000);
+		
+		Animal ani5 = new Animal();
+		ani5.setName("tiger");
+		ani5.setColor("black");
+		ani5.setPrice(5000);
+		
+		List<Animal> animallist = new ArrayList<>();
+		animallist.add(ani1);
+		animallist.add(ani2);
+		animallist.add(ani3);
+		animallist.add(ani4);
+		animallist.add(ani5);
+		
+		animallist.stream().filter(o -> o.getColor().equalsIgnoreCase("white")).forEach( pp -> System.out.println(pp.getName()));
+		animallist.stream().filter(o -> o.getColor().equalsIgnoreCase("white")).forEachOrdered( pp -> System.out.println(pp.getName()));
+		List<String> namelist = animallist.stream().map(Animal::getName).collect(Collectors.toList());		 
